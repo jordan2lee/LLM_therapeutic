@@ -2,3 +2,8 @@ requests
 pandas
 numpy
 scipy
+transformers
+accelerate
+torch
+bitsandbytes
+protobuf
