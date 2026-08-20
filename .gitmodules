@@ -1,0 +1,3 @@
+[submodule "submodule/clinvar-genes"]
+	path = submodule/clinvar-genes
+	url = https://github.com/EllrottLab/clinvar-genes
