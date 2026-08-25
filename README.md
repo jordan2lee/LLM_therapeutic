@@ -25,7 +25,7 @@ Then add this to PATH. Example `export PATH="$HOME/LLM_therapeutic/src/llama.cpp
 
 # Goal
 
-Run a LLM (TxGemma) and systematically benchmark its ability to interpret cancer related genes and mutaitons using public data
+Run a LLM and systematically benchmark its ability to interpret cancer related genes and mutaitons using public data
 
 # Construct and Benchmark LLM 
 Using an external public dataset, determine which genes are mutated and gene expression profile (differential gene expression). Feed these genes and several controls (not mutated, normal expression, not mutated high expression, etc) into LLM for predicitons on biological relevance. Then use the external dataset to benchmark predictions from LLM.
@@ -91,3 +91,8 @@ Assess how well the model captures true clinical attributes.
 ```bash
 python scripts/benchmark.py --inputfile results/summary.tsv
 ```
+
+# Parameter-Efficient Fine-Tuning
+Use LoRA to perform the PEFT to freeze original model weights and train low-rank adapters that will be put into the attention layers.
+
+GGUF is a main inference format for llama.cpp and so will start with the original Qwen model (Qwen2.5-7B-Instruct in 16-bit/Safetensors form)
