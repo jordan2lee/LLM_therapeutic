@@ -89,5 +89,5 @@ python scripts/build_summary.py --outfile results/summary.tsv
 ## Benchmark Performance
 Assess how well the model captures true clinical attributes.
 ```bash
-WIP scripts/benchmark.ipynb
+python scripts/benchmark.py --inputfile results/summary.tsv
 ```
