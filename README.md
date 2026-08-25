@@ -1,6 +1,14 @@
 # LLM_therapeutic
 
 # Set up
+Git clone this repo
+
+Then make sure to carry over the submodule
+```bash
+# populate submodule
+git submodule init
+git submodule update
+```
 
 Install llama.cpp by building from source
 ```bash
@@ -19,7 +27,7 @@ Then add this to PATH. Example `export PATH="$HOME/LLM_therapeutic/src/llama.cpp
 
 Run a LLM (TxGemma) and systematically benchmark its ability to interpret cancer related genes and mutaitons using public data
 
-# Analysis Plan
+# Construct and Benchmark LLM 
 Using an external public dataset, determine which genes are mutated and gene expression profile (differential gene expression). Feed these genes and several controls (not mutated, normal expression, not mutated high expression, etc) into LLM for predicitons on biological relevance. Then use the external dataset to benchmark predictions from LLM.
 
 ## Build Reference Dataset 
@@ -34,6 +42,13 @@ Then decompress file `tar -xf TMP_20230209.tar.gz`
 python scripts/build_ref.py
 ```
 
+Programatically query ClinVar (public literature and other sources) for clinical significance of these genes based on mutation status and gene expression profile
+```
+submodule/clinvar-genes/scripts/clinvar_genes.py submodule/clinvar-genes/tests/fixtures/gene_list.txt submodule/clinvar-genes/results.ndjson > results/clinical_true.tsv
+```
+
+> File clinical_true.tsv will be used to assess LLM performance
+
 ## Locally download the model
 Using the Qwen family because it performs well on medical, scientific, and biological benchmarks
 ```bash
@@ -44,12 +59,35 @@ cd ../..
 
 > This set up has a fully local LLM with inference on-device so nothing is sent to external servers (proprietary code, patient identifiers, creds, etc)
 
+
 ## Query LLM
 Run LLM. Will initally connect to the internet to download, cache and save model on local drive. 
 After that will run entirely locally
+
+### Get prompts for LLM testing
+By default it does not have permission to write to disk. You can enable this or simply have the outputs send to standard out and save those manually as a file. Shown is the second way.
 ```bash
-llama-cli --hf-repo paultimothymooney/Qwen2.5-7B-Instruct-Q4_K_M-GGUF \
-    --hf-file qwen2.5-7b-instruct-q4_k_m.gguf \
-    --conversation \
-    -p "Act as an expert clinical geneticist and variant curation officer. Maintain a strictly objective, peer-reviewed tone. I am requesting a formal curation profile regarding the co-occurrence of a genomic TP53 mutation and concurrent TP53 protein over-expression in a breast invasive carcinoma cancer patient by synthesizing the available cohort data and case literature. Assign a definitive strength-of-evidence rating (Sufficient Evidence, Moderate Evidence, Minimal, or No Evidence) and return only the strength-of-evidence rating"
+bash scripts/get_prompts.sh
+```
+Then save the stdout to a file called `results/prompts.txt`
+### Get LLM calls
+This model is ran locally, so it is hardcoded to up the tokens. **DO NOT** modify to run on the cloud unless you decrease the tokens are check the projected cost to run.
+```bash
+bash scripts/llm_testing.sh
+```
+Then save the stdout to a file called `results/responses_LLM.txt`
+
+> File responses_LLM.txt will be used to benchmark against public peer-reviewed literature and other data sources
+
+### Consolidate into a single file
+Combine results from different files into a single summary table
+```bash
+python scripts/build_summary.py --outfile results/summary.tsv
+```
+
+> output
+## Benchmark Performance
+Assess how well the model captures true clinical attributes.
+```bash
+python scripts/benchmark.py --inputfile results/summary.tsv
 ```
