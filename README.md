@@ -79,6 +79,13 @@ Then save the stdout to a file called `results/responses_LLM.txt`
 
 > File responses_LLM.txt will be used to benchmark against public peer-reviewed literature and other data sources
 
+### Consolidate into a single file
+Combine results from different files into a single summary table
+```bash
+python scripts/build_summary.py --outfile results/summary.tsv
+```
+
+> output
 ## Benchmark Performance
 Assess how well the model captures true clinical attributes.
 ```bash
