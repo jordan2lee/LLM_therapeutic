@@ -96,3 +96,18 @@ python scripts/benchmark.py --inputfile results/summary.tsv
 Use LoRA to perform the PEFT to freeze original model weights and train low-rank adapters that will be put into the attention layers.
 
 GGUF is a main inference format for llama.cpp and so will start with the original Qwen model (Qwen2.5-7B-Instruct in 16-bit/Safetensors form)
+
+`hf auth login` then follow prompts
+
+Download model
+```bash
+hf download Qwen/Qwen2.5-7B-Instruct \
+    --local-dir models/qwen2.5-7b-instruct
+```
+
+Run parameter-efficient fine-tuning of LLM by applying LoRA (low-rank adaptation). This means the base LLM weights are frozen and only the newly injected adapter is trained.
+```bash
+python scripts/fine_tune_lora.py --train_file results/train.jsonl \
+    --base_model models/qwen2.5-7b-instruct \
+    --output_dir models/qwen2.5-7b-variant-lora
+```
