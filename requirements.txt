@@ -10,3 +10,7 @@ torch
 bitsandbytes
 protobuf
 scikit-learn
+peft
+safetensors
+sentencepiece
+huggingface_hub
