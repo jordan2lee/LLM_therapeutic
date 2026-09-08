@@ -1,20 +1,20 @@
 # LLM Therapeutic: Variant Interpretation & Benchmarking Pipeline
 A computational framework for local inference, fine-tuning, and evaluation of Large Language Models (LLMs) specialized for biological and therapeutic applications.
 
-Systematically benchmark a LLM's ability to interpret genetic variants (ACMG/AMP guidelines) from genes and mutation and expression molecular profiles. Specifically to predict if over/under expression of a gene and a co-occuring mutation would be [Benign, Likely benign, Likely pathogenic, Pathogenic, Uncertain significance].
+Systematically benchmark a LLM's ability to interpret genetic variants (ACMG/AMP guidelines) from genes and mutation and expression molecular profiles. Specifically to predict if over/under expression of a gene and a co-occurring mutation would be [Benign, Likely benign, Likely pathogenic, Pathogenic, Uncertain significance].
 
 ## Overview
 
-*LLM_therapeutic* provides a streamliend pipeline for running open-weight language models (e.g, Qwen2.5, TxGemma) on domain-specific biomedical tasks. This repository supports quantized local inference, token-level evaluation, and custom dataset preparation for bioinformatics workflows.
+*LLM_therapeutic* provides a streamlined pipeline for running open-weight language models (e.g, Qwen2.5, TxGemma) on domain-specific biomedical tasks. This repository supports quantized local inference, token-level evaluation, and custom dataset preparation for bioinformatics workflows.
 
 ### Key Features
 - **Quantized Local Inference:** Standardized `llama.cpp` / GGUF execution pipelines optimized for local setups with limited resources.
 - **Biomedical Tokenization & Data Pipelines:** Custom preprocessing modules for multi-omics metadata, gene expression profiles and mutational variants.
 - **Evaluation Benchmarks:** Scripts to evaluate model outputs against published clinical data.
-- **Parameter-efficient fine-tuning:** Tune foundation model with molecular data for cancer variant prediction and evaluate performance improvment.
+- **Parameter-efficient fine-tuning:** Tune foundation model with molecular data for cancer variant prediction and evaluate performance improvement.
 
 ### Results Preview
-- Applying parameter-efficient fine-tuning (PEFT) to human gene profiles (sub-sampling of genes) improved model sensitivity for high-risk variants, raising both balanced accuracy and recall by 0.11 for samples with over-expressed genes with co-occuring mutations. While this resulted in a marginal precision loss (0.02), the net performance gain was substantial. Final clinical utility will depend on wheater downstream applications prioritize minimizing false negatives over maintaining higher precision.
+- Applying parameter-efficient fine-tuning (PEFT) to human gene profiles (sub-sample of genes) improved model sensitivity for high-risk variants, raising both balanced accuracy and recall by 0.11 for samples with over-expressed genes with co-occurring mutations. While this resulted in a marginal precision loss (0.02), the net performance gain was substantial. Final clinical utility will depend on whether downstream applications prioritize minimizing false negatives over maintaining higher precision.
 
 
 
@@ -49,17 +49,17 @@ cmake --build build --config Release
 Then add this to PATH. Example `export PATH="$HOME/LLM_therapeutic/src/llama.cpp/build/bin:$PATH"` in `.zshrc`
 
 
-Next locally download the model, will initally connect to the internet to download, cache and save model on local drive. After that will run entirely local. Using the Qwen model family because it performs well on medical, scientific, and biological benchmarks. No `hf login` needed for public GGUF mirror
+Next locally download the model, will initially connect to the internet to download, cache and save model on local drive. After that will run entirely local. Using the Qwen model family because it performs well on medical, scientific, and biological benchmarks. No `hf login` needed for public GGUF mirror
 ```bash
 hf download paultimothymooney/Qwen2.5-7B-Instruct-Q4_K_M-GGUF \
     qwen2.5-7b-instruct-q4_k_m.gguf \
     --local-dir models
 ```
 
-This set up has a fully local LLM with inference on-device so nothing is sent to external servers (proprietary code, patient identifiers, creds, etc)
+This set provides a fully local LLM with inference on-device so nothing is sent to external servers (proprietary code, patient identifiers, creds, etc)
 
 ## 1. Construct and Benchmark LLM 
-Using an external public dataset, determine which genes are mutated and gene expression profiles (differential gene expression). Feed these genes and several controls (not mutated, normal expression, not mutated high expression, etc) into LLM for predicitons on biological relevance. Then use the external dataset to benchmark predictions from LLM.
+Using an external public dataset, determine which genes are mutated and gene expression profiles (differential gene expression). Feed these genes and several controls (not mutated, normal expression, not mutated high expression, etc) into LLM for predictions on biological relevance. Then use the external dataset to benchmark predictions from LLM.
 
 ### Build Reference Dataset 
 Use the public cleaned TCGA data that is described in the [Nature paper](https://www.cell.com/cancer-cell/fulltext/S1535-6108(24)00477-X?_returnURL=https%3A%2F%2Flinkinghub.elsevier.com%2Fretrieve%2Fpii%2FS153561082400477X%3Fshowall%3Dtrue) (Ellrott et al 2025) and is referenced in the [Tumor Molecular Pathology Toolkit GitHub](https://github.com/NCICCGPO/gdan-tmp-models)
@@ -73,7 +73,7 @@ python scripts/build_ref.py
 ```
 > To change default files use -i and -o
 
-Programatically query ClinVar (public literature and other sources) for clinical significance of these genes based on mutation status and gene expression profile
+Programmatically query ClinVar (public literature and other sources) for clinical significance of these genes based on mutation status and gene expression profile
 ```
 submodule/clinvar-genes/scripts/clinvar_genes.py submodule/clinvar-genes/tests/fixtures/gene_list.txt submodule/clinvar-genes/results.ndjson > results/clinical_true.tsv
 ```
@@ -89,7 +89,7 @@ bash scripts/get_prompts.sh
 ```
 Then save the stdout to a file called `results/prompts.txt`
 #### Get LLM calls
-This model is ran locally, so it is hardcoded to up the tokens. **DO NOT** modify to run on the cloud unless you decrease the tokens are check the projected cost to run.
+This model is run locally, so it is hardcoded to up the tokens. **DO NOT** modify to run on the cloud unless you decrease the tokens are check the projected cost to run.
 ```bash
 bash scripts/llm_testing.sh
 ```
