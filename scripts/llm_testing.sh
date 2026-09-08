@@ -17,8 +17,7 @@ while IFS= read -r prompt_text || [ -n "$prompt_text" ]; do
         continue
     fi
     llama-cli \
-        --hf-repo paultimothymooney/Qwen2.5-7B-Instruct-Q4_K_M-GGUF \
-        --hf-file qwen2.5-7b-instruct-q4_k_m.gguf \
+        -m models/qwen2.5-7b-instruct-q4_k_m.gguf \
         -c 65536 \
         -sys "You are a concise classifier. Respond ONLY with the requested classification text. Do NOT include greetings, intro phrases, bullet points, rationales, headers, or markdown formatting." \
         -p "$prompt_text"
