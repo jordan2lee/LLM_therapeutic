@@ -16,9 +16,8 @@ while IFS= read -r prompt_text || [ -n "$prompt_text" ]; do
     if [ -z "$prompt_text" ]; then
         continue
     fi
-    llama-cli \
-        -m models/qwen2.5-7b-instruct-q4_k_m.gguf \
-        -c 65536 \
-        -sys "You are a concise classifier. Respond ONLY with the requested classification text. Do NOT include greetings, intro phrases, bullet points, rationales, headers, or markdown formatting." \
-        -p "$prompt_text"
+    python scripts/run_tuned_model.py \
+        --adapter_dir models/qwen2.5-7b-variant-lora \
+        --question "$prompt_text"
 done < "$INPUT_FILE"
+
