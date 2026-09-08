@@ -1,6 +1,8 @@
-# LLM_therapeutic
+# Goal
 
-# Set up
+Run a LLM and systematically benchmark its ability to interpret cancer related genes and mutaitons using public data
+
+## Set up
 Git clone this repo
 
 Then make sure to carry over the submodule
@@ -21,9 +23,6 @@ cmake --build build --config Release
 
 Then add this to PATH. Example `export PATH="$HOME/LLM_therapeutic/src/llama.cpp/build/bin:$PATH"` in `.zshrc`
 
-# Goal
-
-Run a LLM and systematically benchmark its ability to interpret cancer related genes and mutaitons using public data
 
 # 1. Construct and Benchmark LLM 
 Using an external public dataset, determine which genes are mutated and gene expression profile (differential gene expression). Feed these genes and several controls (not mutated, normal expression, not mutated high expression, etc) into LLM for predicitons on biological relevance. Then use the external dataset to benchmark predictions from LLM.
