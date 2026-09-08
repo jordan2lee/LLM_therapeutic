@@ -36,9 +36,9 @@ wget -P src https://api.gdc.cancer.gov/data/5116e86f-7646-4b7b-9d6e-dafddf2cc0f3
 Then decompress file `tar -xf TMP_20230209.tar.gz`
 
 ```bash
-# to change default files use -i and -o
 python scripts/build_ref.py
 ```
+> To change default files use -i and -o
 
 Programatically query ClinVar (public literature and other sources) for clinical significance of these genes based on mutation status and gene expression profile
 ```
@@ -48,6 +48,8 @@ submodule/clinvar-genes/scripts/clinvar_genes.py submodule/clinvar-genes/tests/f
 > File clinical_true.tsv will be used to assess LLM performance
 
 ## Locally download the model
+Will initally connect to the internet to download, cache and save model on local drive. After that will run fully locally.
+
 Using the Qwen family because it performs well on medical, scientific, and biological benchmarks
 
 No `hf login` needed for public GGUF mirror
@@ -59,11 +61,7 @@ hf download paultimothymooney/Qwen2.5-7B-Instruct-Q4_K_M-GGUF \
 
 > This set up has a fully local LLM with inference on-device so nothing is sent to external servers (proprietary code, patient identifiers, creds, etc)
 
-
-## Query LLM
-Run LLM. Will initally connect to the internet to download, cache and save model on local drive. 
-After that will run entirely locally
-
+## Run Base LLM
 ### Get prompts for LLM testing
 By default it does not have permission to write to disk. You can enable this or simply have the outputs send to standard out and save those manually as a file. Shown is the second way.
 ```bash
