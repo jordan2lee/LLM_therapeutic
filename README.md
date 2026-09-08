@@ -21,8 +21,6 @@ cmake --build build --config Release
 
 Then add this to PATH. Example `export PATH="$HOME/LLM_therapeutic/src/llama.cpp/build/bin:$PATH"` in `.zshrc`
 
-> `llama-server` is used downstream instead of `llama server` because installed from source 
-
 # Goal
 
 Run a LLM and systematically benchmark its ability to interpret cancer related genes and mutaitons using public data
@@ -51,10 +49,12 @@ submodule/clinvar-genes/scripts/clinvar_genes.py submodule/clinvar-genes/tests/f
 
 ## Locally download the model
 Using the Qwen family because it performs well on medical, scientific, and biological benchmarks
+
+No `hf login` needed for public GGUF mirror
 ```bash
-cd src/llama.cpp
-curl -L -o models/qwen2.5-7b-instruct-q4_k_m.gguf "https://huggingface.co"
-cd ../..
+hf download paultimothymooney/Qwen2.5-7B-Instruct-Q4_K_M-GGUF \
+    qwen2.5-7b-instruct-q4_k_m.gguf \
+    --local-dir models
 ```
 
 > This set up has a fully local LLM with inference on-device so nothing is sent to external servers (proprietary code, patient identifiers, creds, etc)
@@ -85,7 +85,6 @@ Combine results from different files into a single summary table
 python scripts/build_summary.py --outfile results/summary.tsv
 ```
 
-> output
 ## Benchmark Performance
 Assess how well the model captures true clinical attributes.
 ```bash
@@ -93,7 +92,7 @@ python scripts/benchmark.py --inputfile results/summary.tsv
 ```
 
 # Parameter-Efficient Fine-Tuning
-Use LoRA to perform the PEFT to freeze original model weights and train low-rank adapters that will be put into the attention layers.
+Use LoRA to perform the PEFT to freeze original model weights and train low-rank adapters that will be put into the attention and feed-forward (MLP) layers.
 
 GGUF is a main inference format for llama.cpp and so will start with the original Qwen model (Qwen2.5-7B-Instruct in 16-bit/Safetensors form)
 
