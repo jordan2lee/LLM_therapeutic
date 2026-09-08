@@ -1,6 +1,6 @@
 # Goal
 
-Run a LLM and systematically benchmark its ability to interpret cancer related genes and mutaitons using public data
+Run a LLM and systematically benchmark its ability to interpret genetic variants (ACMG/AMP guidelines) from genes and mutation and expression molecular profiles. Specifically to predict if over/under expression of a gene and a co-occuring mutation would be [Benign, Likely benign, Likely pathogenic, Pathogenic, Uncertain significance].
 
 ## Set up
 Git clone this repo
