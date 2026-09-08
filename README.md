@@ -3,19 +3,21 @@ A computational framework for local inference, fine-tuning, and evaluation of La
 
 Systematically benchmark a LLM's ability to interpret genetic variants (ACMG/AMP guidelines) from genes and mutation and expression molecular profiles. Specifically to predict if over/under expression of a gene and a co-occuring mutation would be [Benign, Likely benign, Likely pathogenic, Pathogenic, Uncertain significance].
 
-
-### Results Preview
-Applying parameter-efficient fine-tuning (PEFT) to human gene profiles (sub-sampling of genes) improved model sensitivity for high-risk variants, raising both balanced accuracy and recall by 0.11 for samples with over-expressed genes with co-occuring mutations. While this resulted in a marginal precision loss (0.02), the net performance gain was substantial. Final clinical utility will depend on wheater downstream applications prioritize minimizing false negatives over maintaining higher precision.
-
 ## Overview
 
-`LLM_therapeutic` provides a streamliend pipeline for running open-weight language models (e.g, Qwen2.5, TxGemma) on domain-specific biomedical tasks. This repository supports quantized local inference, token-level evaluation, and custom dataset preparation for bioinformatics workflows.
+*LLM_therapeutic* provides a streamliend pipeline for running open-weight language models (e.g, Qwen2.5, TxGemma) on domain-specific biomedical tasks. This repository supports quantized local inference, token-level evaluation, and custom dataset preparation for bioinformatics workflows.
 
 ### Key Features
 - **Quantized Local Inference:** Standardized `llama.cpp` / GGUF execution pipelines optimized for local setups with limited resources.
 - **Biomedical Tokenization & Data Pipelines:** Custom preprocessing modules for multi-omics metadata, gene expression profiles and mutational variants.
 - **Evaluation Benchmarks:** Scripts to evaluate model outputs against published clinical data.
 - **Parameter-efficient fine-tuning:** Tune foundation model with molecular data for cancer variant prediction and evaluate performance improvment.
+
+### Results Preview
+- Applying parameter-efficient fine-tuning (PEFT) to human gene profiles (sub-sampling of genes) improved model sensitivity for high-risk variants, raising both balanced accuracy and recall by 0.11 for samples with over-expressed genes with co-occuring mutations. While this resulted in a marginal precision loss (0.02), the net performance gain was substantial. Final clinical utility will depend on wheater downstream applications prioritize minimizing false negatives over maintaining higher precision.
+
+
+
 ## Quickstart
 
 ### 1. Installation
