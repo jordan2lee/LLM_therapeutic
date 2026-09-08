@@ -23,6 +23,20 @@ cmake --build build --config Release
 
 Then add this to PATH. Example `export PATH="$HOME/LLM_therapeutic/src/llama.cpp/build/bin:$PATH"` in `.zshrc`
 
+## Download Base Model
+Locally download the model
+Will initally connect to the internet to download, cache and save model on local drive. After that will run fully locally.
+
+Using the Qwen family because it performs well on medical, scientific, and biological benchmarks
+
+No `hf login` needed for public GGUF mirror
+```bash
+hf download paultimothymooney/Qwen2.5-7B-Instruct-Q4_K_M-GGUF \
+    qwen2.5-7b-instruct-q4_k_m.gguf \
+    --local-dir models
+```
+
+> This set up has a fully local LLM with inference on-device so nothing is sent to external servers (proprietary code, patient identifiers, creds, etc)
 
 # 1. Construct and Benchmark LLM 
 Using an external public dataset, determine which genes are mutated and gene expression profile (differential gene expression). Feed these genes and several controls (not mutated, normal expression, not mutated high expression, etc) into LLM for predicitons on biological relevance. Then use the external dataset to benchmark predictions from LLM.
@@ -46,19 +60,6 @@ submodule/clinvar-genes/scripts/clinvar_genes.py submodule/clinvar-genes/tests/f
 
 > File clinical_true.tsv will be used to assess LLM performance
 
-## Locally download the model
-Will initally connect to the internet to download, cache and save model on local drive. After that will run fully locally.
-
-Using the Qwen family because it performs well on medical, scientific, and biological benchmarks
-
-No `hf login` needed for public GGUF mirror
-```bash
-hf download paultimothymooney/Qwen2.5-7B-Instruct-Q4_K_M-GGUF \
-    qwen2.5-7b-instruct-q4_k_m.gguf \
-    --local-dir models
-```
-
-> This set up has a fully local LLM with inference on-device so nothing is sent to external servers (proprietary code, patient identifiers, creds, etc)
 
 ## Run Base LLM
 ### Get prompts for LLM testing
@@ -76,7 +77,7 @@ Then save the stdout to a file called `results/responses_LLM.txt`
 
 > File responses_LLM.txt will be used to benchmark against public peer-reviewed literature and other data sources
 
-### Benchmark Performance
+## Benchmark Performance
 Consolidate results from different files into a single summary table. Then assess how well the model captures true clinical attributes.
 ```bash
 python scripts/build_summary.py --outfile results/summary.tsv
@@ -122,5 +123,5 @@ python scripts/build_summary.py \
 python scripts/benchmark.py --inputfile results/summary_PEFT.tsv
 ```
 
-#### Results
+# Results
 Applying parameter-efficient fine-tuning (PEFT) to human gene profiles (sub-sampling of genes) improved model sensitivity for high-risk variants, raising both balanced accuracy and recall by 0.11 for samples with over-expressed genes with co-occuring mutations. While this resulted in a marginal precision loss (0.02), the net performance gain was substantial. Final clinical utility will depend on wheater downstream applications prioritize minimizing false negatives over maintaining higher precision.
