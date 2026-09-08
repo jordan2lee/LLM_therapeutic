@@ -41,7 +41,7 @@ base.generation_config.top_k = None
 # forward pass through the base weights and adapter's learned low-rank updates
 model = PeftModel.from_pretrained(base, args.adapter_dir)
 
-# mode 1: merge and save model
+# mode 1: merge base+adapters and save model to disk
 if args.merge_output:
     # print(f"Merging adapter into base weights: {args.merge_output}")
     # load adapter info with base model (no PEFT wrapper)
