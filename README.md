@@ -76,15 +76,10 @@ Then save the stdout to a file called `results/responses_LLM.txt`
 
 > File responses_LLM.txt will be used to benchmark against public peer-reviewed literature and other data sources
 
-### Consolidate into a single file
-Combine results from different files into a single summary table
+### Benchmark Performance
+Consolidate results from different files into a single summary table. Then assess how well the model captures true clinical attributes.
 ```bash
 python scripts/build_summary.py --outfile results/summary.tsv
-```
-
-## Benchmark Performance
-Assess how well the model captures true clinical attributes.
-```bash
 python scripts/benchmark.py --inputfile results/summary.tsv
 ```
 
@@ -116,3 +111,16 @@ bash scripts/infer.sh
 Then save the stdout to a file called `results/responses_PEFT_LLM.txt`
 
 > File responses_PEFT_LLM.txt will be used to benchmark against base LLM
+
+### Benchmark Performance
+Consolidate results from different files into a single summary table. Then assess how well the model captures true clinical attributes.
+```bash
+python scripts/build_summary.py \
+    --resp_file results/responses_PEFT_LLM.txt \
+    --outfile results/summary_PEFT.tsv
+     
+python scripts/benchmark.py --inputfile results/summary_PEFT.tsv
+```
+
+#### Results
+Applying parameter-efficient fine-tuning (PEFT) to human gene profiles (sub-sampling of genes) improved model sensitivity for high-risk variants, raising both balanced accuracy and recall by 0.11 for samples with over-expressed genes with co-occuring mutations. While this resulted in a marginal precision loss (0.02), the net performance gain was substantial. Final clinical utility will depend on wheater downstream applications prioritize minimizing false negatives over maintaining higher precision.
