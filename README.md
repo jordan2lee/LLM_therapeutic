@@ -113,7 +113,7 @@ Then save the stdout to a file called `results/responses_PEFT_LLM.txt`
 
 > File responses_PEFT_LLM.txt will be used to benchmark against base LLM
 
-### Benchmark Performance
+## Benchmark Performance
 Consolidate results from different files into a single summary table. Then assess how well the model captures true clinical attributes.
 ```bash
 python scripts/build_summary.py \
