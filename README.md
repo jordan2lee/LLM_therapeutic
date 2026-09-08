@@ -114,7 +114,9 @@ python scripts/fine_tune_lora.py --train_file results/train.jsonl \
 
 Run newly fine-tuned model
 ```bash
-python scripts/run_tuned_model.py \
-    --adapter_dir models/qwen2.5-7b-variant-lora \
-    --question "Act as an expert clinical geneticist and variant curation officer. Evaluate the following molecular profile in a breast invasive carcinoma patient: 'BRCA1' genomic mutation status is mutated and 'BRCA1' protein expression is over-expressed. Evaluate these features together and choose one classification from ['Pathogenic', 'Likely pathogenic', 'Uncertain significance (VUS)', 'Likely benign', 'Benign']. Output ONLY the exact classification string and nothing else."
+bash scripts/infer.sh
 ```
+
+Then save the stdout to a file called `results/responses_PEFT_LLM.txt`
+
+> File responses_PEFT_LLM.txt will be used to benchmark against base LLM
