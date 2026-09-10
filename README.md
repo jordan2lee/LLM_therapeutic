@@ -4,7 +4,6 @@ A computational framework for local inference, fine-tuning, and evaluation of La
 Systematically benchmark a LLM's ability to interpret genetic variants (ACMG/AMP guidelines) from genes and mutation and expression molecular profiles. Specifically to predict if over/under expression of a gene and a co-occurring mutation would be [Benign, Likely benign, Likely pathogenic, Pathogenic, Uncertain significance].
 
 ## Overview
-
 *LLM_therapeutic* provides a streamlined pipeline for running open-weight language models (e.g, Qwen2.5, TxGemma) on domain-specific biomedical tasks. This repository supports quantized local inference, token-level evaluation, and custom dataset preparation for bioinformatics workflows.
 
 ### Key Features
@@ -16,10 +15,7 @@ Systematically benchmark a LLM's ability to interpret genetic variants (ACMG/AMP
 ### Results Preview
 - Applying parameter-efficient fine-tuning (PEFT) to human gene profiles (sub-sample of genes) improved model sensitivity for high-risk variants, raising both balanced accuracy and recall by 0.11 for samples with over-expressed genes with co-occurring mutations. While this resulted in a marginal precision loss (0.02), the net performance gain was substantial. Final clinical utility will depend on whether downstream applications prioritize minimizing false negatives over maintaining higher precision.
 
-
-
 ## Quickstart
-
 ### 1. Installation
 Clone the repository and set up a virtual environment
 ```bash
@@ -74,12 +70,11 @@ python scripts/build_ref.py
 > To change default files use -i and -o
 
 Programmatically query ClinVar (public literature and other sources) for clinical significance of these genes based on mutation status and gene expression profile
-```
+```bash
 submodule/clinvar-genes/scripts/clinvar_genes.py submodule/clinvar-genes/tests/fixtures/gene_list.txt submodule/clinvar-genes/results.ndjson > results/clinical_true.tsv
 ```
 
-> File clinical_true.tsv will be used to assess LLM performance
-
+> File clinical_true.tsv will be used to assess LLM performance downstream
 
 ### Run Base LLM
 #### Get prompts for LLM testing
@@ -88,6 +83,7 @@ By default it does not have permission to write to disk. You can enable this or 
 bash scripts/get_prompts.sh
 ```
 Then save the stdout to a file called `results/prompts.txt`
+
 #### Get LLM calls
 This model is run locally, so it is hardcoded to up the tokens. **DO NOT** modify to run on the cloud unless you decrease the tokens are check the projected cost to run.
 ```bash
@@ -139,7 +135,6 @@ Consolidate results from different files into a single summary table. Then asses
 python scripts/build_summary.py \
     --resp_file results/responses_PEFT_LLM.txt \
     --outfile results/summary_PEFT.tsv
-     
 python scripts/benchmark.py --inputfile results/summary_PEFT.tsv
 ```
 
